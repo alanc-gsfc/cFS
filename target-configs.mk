@@ -7,14 +7,20 @@
 #
 # This should reside in the same top-level directory as the main Makefile
 #
-
+#
+# APC: targets for current work
+#      native_std    (default opts)
+#      native_std_b  (SBN time client opts)
+#      rpi_qnx8      (default opts)
+#      rpi_qnx8_b    (SBN time client opts)
 
 # The config names is a complete list of configurations to build
-CONFIG_NAMES := native_std native_eds
+CONFIG_NAMES := native_std native_eds native_std_b
 CONFIG_NAMES += pc686_rtems5 gr712_rtems5
 CONFIG_NAMES += rpi_vxworks7 rpi_linux
 CONFIG_NAMES += qemu_yocto_linux
 CONFIG_NAMES += osal edslib
+CONFIG_NAMES += rpi_qnx8 rpi_qnx8_b
 
 # The CFS config names is a subset of the CONFIG_NAMES which use CFS
 # Being in this list means the standard set of CFS options are applied
@@ -25,10 +31,13 @@ CFS_CONFIG_NAMES    := $(filter-out $(NONCFS_CONFIG_NAMES),$(CONFIG_NAMES))
 # this is required for everything listed in CONFIG_NAMES
 
 O_native_std = build-native_std
+O_native_std_b = build-native_std_b
 O_native_eds = build-native_eds
 O_pc686_rtems5 = build-pc686_rtems5
 O_gr712_rtems5 = build-gr712_rtems5
 O_rpi_vxworks7 = build-rpi_vxworks7
+O_rpi_qnx8 = build-rpi_qnx8
+O_rpi_qnx8_b = build-rpi_qnx8_b
 O_rpi_linux = build-rpi_linux
 O_qemu_yocto_linux = build-qemu_yocto_linux
 O_osal = build-osal
@@ -37,10 +46,13 @@ O_edslib = build-edslib
 # Define the ARCH used for each target group
 # this is required for everything listed in CFS_CONFIG_NAMES
 ARCH_native_std = native
+ARCH_native_std_b = native
 ARCH_native_eds = native
 ARCH_pc686_rtems5 = i686-rtems5
 ARCH_gr712_rtems5 = leon3-gaisler-rtems5
 ARCH_rpi_vxworks7 = arm-rpi-vxworks7
+ARCH_rpi_qnx8 = aarch64le-qnx-gnu
+ARCH_rpi_qnx8_b = aarch64le-qnx-gnu
 ARCH_rpi_linux = arm-rpi-linux
 ARCH_qemu_yocto_linux = riscv64-poky-linux
 
@@ -49,12 +61,19 @@ ARCH_qemu_yocto_linux = riscv64-poky-linux
 ##############
 # Native build (traditional standard development config)
 ##############
-PREP_OPTS_native_std += -DENABLE_UNIT_TESTS=TRUE
+PREP_OPTS_native_std += -DENABLE_UNIT_TESTS=FALSE
 PREP_OPTS_native_std += -DSIMULATION=$(ARCH)
 PREP_OPTS_native_std += -DCFE_EDS_ENABLED=OFF
 PREP_OPTS_native_std += -DMISSIONCONFIG=sample
 PREP_OPTS_native_std += -DCMAKE_BUILD_TYPE=debug
 PLATFORM_native_std  =  default_cpu1
+
+PREP_OPTS_native_std_b += -DENABLE_UNIT_TESTS=FALSE
+PREP_OPTS_native_std_b += -DSIMULATION=$(ARCH)
+PREP_OPTS_native_std_b += -DCFE_EDS_ENABLED=OFF
+PREP_OPTS_native_std_b += -DMISSIONCONFIG=sample_b
+PREP_OPTS_native_std_b += -DCMAKE_BUILD_TYPE=debug
+PLATFORM_native_std_b  =  default_cpu1
 
 ##############
 # EDS build
@@ -93,6 +112,16 @@ PREP_OPTS_rpi_linux    += -DSIMULATION=$(ARCH)
 PREP_OPTS_rpi_linux    += -DMISSIONCONFIG=sample
 PREP_OPTS_rpi_linux    += -DCMAKE_BUILD_TYPE=release
 PLATFORM_rpi_linux     =  default_cpu1
+PREP_OPTS_rpi_qnx8 += -DENABLE_UNIT_TESTS=FALSE
+PREP_OPTS_rpi_qnx8 += -DSIMULATION=$(ARCH)
+PREP_OPTS_rpi_qnx8 += -DMISSIONCONFIG=sample
+PREP_OPTS_rpi_qnx8 += -DCMAKE_BUILD_TYPE=debug
+PLATFORM_rpi_qnx8  =  default_cpu1
+PREP_OPTS_rpi_qnx8_b += -DENABLE_UNIT_TESTS=FALSE
+PREP_OPTS_rpi_qnx8_b += -DSIMULATION=$(ARCH)
+PREP_OPTS_rpi_qnx8_b += -DMISSIONCONFIG=sample_b
+PREP_OPTS_rpi_qnx8_b += -DCMAKE_BUILD_TYPE=debug
+PLATFORM_rpi_qnx8_b  =  default_cpu1
 
 ##############
 # Flight-like build (embedded yocto linux targets)
