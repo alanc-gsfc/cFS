@@ -100,7 +100,7 @@ LIST(APPEND MISSION_GLOBAL_APPLIST hk)
 
 # Some apps do not have EDS support yet.
 # These should not be included by default when building with EDS.
-if (NOT CFE_EDS_ENABLED AND SIMULATION STREQUAL "native")
+if (NOT CFE_EDS_ENABLED)
     LIST(APPEND MISSION_GLOBAL_APPLIST sbn)
     LIST(APPEND MISSION_GLOBAL_APPLIST sbn_udp)
     LIST(APPEND MISSION_GLOBAL_APPLIST sbn_f_remap)
